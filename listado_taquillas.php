@@ -12,6 +12,11 @@ if (isset($_SESSION['localidad'])) {
     $selectedLocalidad = $_SESSION['localidad'];
 }
 
+// Si se ha enviado el formulario, guardamos la localidad seleccionada en la variable $selectedLocalidad y en la variable de sesion localidad
+if(isset($_GET['localidad'])){
+    $selectedLocalidad = $_GET['localidad'];
+    $_SESSION['localidad'] = $selectedLocalidad;
+}
 
 
 ?>
@@ -46,9 +51,8 @@ if (isset($_GET['localidad'])) {
     ////////////////////////////////////////////
     // TODO 2: Obtener taquillas según filtro //
     ////////////////////////////////////////////
-    // Guardamos en la variable $selectedLocalidad el valor de la localidad seleccionada y tambien lo guardamos en la variable de sesion localidad
-    $selectedLocalidad = $_GET['localidad'];
-    $_SESSION['localidad'] = $selectedLocalidad;
+   
+   
 
     $sql = "SELECT * FROM puntosderecogida";
     if ($selectedLocalidad !== '') {
