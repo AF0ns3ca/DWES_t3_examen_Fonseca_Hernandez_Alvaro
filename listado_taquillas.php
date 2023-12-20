@@ -1,16 +1,15 @@
 <?php
 require "connection.php";
 $conexion = conectarBD();
+// Iniciamos sesion
 session_start();
 
+// Creamos ua variable para guardar la localidad seleccionada
 $selectedLocalidad = '';
-if(isset($_SESSION['localidad'])) {
-    $selectedLocalidad = $_SESSION['localidad'];
-}
 
-if(isset($_GET['localidad'])) {
-    $selectedLocalidad = $_GET['localidad'];
-    $_SESSION['localidad'] = $selectedLocalidad;
+// Si existe la variable de sesion localidad, la guardamos en la variable $selectedLocalidad
+if (isset($_SESSION['localidad'])) {
+    $selectedLocalidad = $_SESSION['localidad'];
 }
 
 
@@ -29,9 +28,9 @@ if(isset($_GET['localidad'])) {
     <form action="" method="get">
         <select name="localidad">
             <option value="">Todas las localidades</option>
-            <option value="Gijón" <?= $selectedLocalidad == 'Gijón' ? 'selected' : ''; ?> >Gijón</option>
-        <option value="Oviedo" <?= $selectedLocalidad == 'Oviedo' ? 'selected' : ''; ?>>Oviedo</option>
-        <option value="Avilés" <?= $selectedLocalidad == 'Avilés' ? 'selected' : ''; ?>>Avilés</option>
+            <option value="Gijón" <?= $selectedLocalidad == 'Gijón' ? 'selected' : ''; ?>>Gijón</option>
+            <option value="Oviedo" <?= $selectedLocalidad == 'Oviedo' ? 'selected' : ''; ?>>Oviedo</option>
+            <option value="Avilés" <?= $selectedLocalidad == 'Avilés' ? 'selected' : ''; ?>>Avilés</option>
         </select>
         <input type="submit" value="Buscar">
     </form>
@@ -47,9 +46,12 @@ if (isset($_GET['localidad'])) {
     ////////////////////////////////////////////
     // TODO 2: Obtener taquillas según filtro //
     ////////////////////////////////////////////
-        
+    // Guardamos en la variable $selectedLocalidad el valor de la localidad seleccionada y tambien lo guardamos en la variable de sesion localidad
+    $selectedLocalidad = $_GET['localidad'];
+    $_SESSION['localidad'] = $selectedLocalidad;
+
     $sql = "SELECT * FROM puntosderecogida";
-    if($selectedLocalidad !== '') {
+    if ($selectedLocalidad !== '') {
         $sql .= " WHERE localidad = ?";
         $resultado = $conexion->prepare($sql);
         $resultado->execute([$selectedLocalidad]);
@@ -64,8 +66,8 @@ if (isset($_GET['localidad'])) {
         /////////////////////////////////////
         // TODO 3: Imprimir filas de tabla //
         /////////////////////////////////////
-        while($row = $resultado->fetch(PDO::FETCH_ASSOC)) {
-            if($row['ocupadas'] !== $row['capacidad']){
+        while ($row = $resultado->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['ocupadas'] !== $row['capacidad']) {
                 echo "<tr><td>" . htmlspecialchars($row["localidad"]) . "</td><td>" . htmlspecialchars($row["direccion"]) . "</td><td>" . htmlspecialchars($row["capacidad"]) . "</td><td>" . htmlspecialchars($row["ocupadas"]) . "</td></tr>";
             }
         }
